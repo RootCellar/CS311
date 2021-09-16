@@ -13,6 +13,12 @@
 //assert
 #include <cassert>
 
+//swap
+#include <utility>
+
+//copy
+#include <algorithm>
+
 template<typename Data_Type>
 class SSArray {
 
@@ -47,6 +53,32 @@ public:
 
   ~SSArray() {
     delete [] _arrPtr;
+  }
+
+  //Copy Constructor
+  SSArray(const SSArray<value_type>& other): _size(other._size), _arrPtr(new value_type[other._size]) {
+    assert(_size == other.size());
+    std::copy(other.begin(), other.end(), begin());
+  }
+
+  SSArray(SSArray<value_type> && other) noexcept
+  {
+    swap(other);
+  }
+
+  //Copy Assignment
+  SSArray<value_type> & operator=(const SSArray<value_type> & other)
+  {
+    SSArray<value_type> copy(other);
+    swap(copy);
+    return *this;
+  }
+
+  //Move assignment
+  SSArray<value_type> & operator=(SSArray<value_type> && other) noexcept
+  {
+    swap(other);
+    return *this;
   }
 
 //public functions
@@ -89,6 +121,10 @@ public:
 //private functions
 private:
 
+  void swap(SSArray<value_type>& other) noexcept {
+    std::swap(_size, other._size);
+    std::swap(_arrPtr, other._arrPtr);
+  }
 
 //Private Data Members
 private:
@@ -131,7 +167,7 @@ bool operator<=( const SSArray<Data_Type> & one, const SSArray<Data_Type> & two 
 
 template<typename Data_Type>
 bool operator>( const SSArray<Data_Type> & one, const SSArray<Data_Type> & two ) {
-  return !(one <= two);
+  return one >= two;
 }
 
 template<typename Data_Type>
