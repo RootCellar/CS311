@@ -19,6 +19,7 @@
 //copy
 #include <algorithm>
 
+//Invariants: _arrPtr is always a valid pointer that can be deleted
 template<typename Data_Type>
 class SSArray {
 
@@ -56,8 +57,9 @@ public:
   }
 
   //Copy Constructor
-  SSArray(const SSArray<value_type>& other): _size(other._size), _arrPtr(new value_type[other._size]) {
-    assert(_size == other.size());
+  SSArray(const SSArray<value_type>& other) {
+    _size = other._size;
+    _arrPtr = new value_type[_size];
     std::copy(other.begin(), other.end(), begin());
   }
 
@@ -127,14 +129,20 @@ public:
 private:
 
   void swap(SSArray<value_type>& other) noexcept {
+    assert( _arrPtr != nullptr );
+    assert( _size != size_type(-1) );
+
+    assert( other._arrPtr != nullptr );
+    assert( other._size != size_type(-1) );
+
     std::swap(_size, other._size);
     std::swap(_arrPtr, other._arrPtr);
   }
 
 //Private Data Members
 private:
-  value_type* _arrPtr;
-  size_type _size;
+  value_type* _arrPtr = nullptr;
+  size_type _size = size_type(-1);
 };
 
 //Global Operator Functions
