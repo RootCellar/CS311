@@ -1,2 +1,2 @@
-# CS311
-Repository of CS311 project code.
+# CS311 - Data Structures & Algorithms
+Repository containing CS311 (C++) projects and possibly other code.
