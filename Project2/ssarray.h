@@ -102,7 +102,7 @@ bool operator==( const SSArray<Data_Type> & one, const SSArray<Data_Type> & two 
   if(one.size() != two.size()) return false;
 
   for(std::size_t i = 0; i < one.size(); i++) {
-    if(one[i] != two[1]) return false;
+    if(one[i] != two[i]) return false;
   }
 
   return true;
@@ -126,17 +126,17 @@ bool operator<( const SSArray<Data_Type> & one, const SSArray<Data_Type> & two )
 
 template<typename Data_Type>
 bool operator<=( const SSArray<Data_Type> & one, const SSArray<Data_Type> & two ) {
-  return one < two || one == two;
+  return !(one > two);
 }
 
 template<typename Data_Type>
 bool operator>( const SSArray<Data_Type> & one, const SSArray<Data_Type> & two ) {
-  return !(one < two) && one != two;
+  return !(one <= two);
 }
 
 template<typename Data_Type>
 bool operator>=( const SSArray<Data_Type> & one, const SSArray<Data_Type> & two ) {
-  return !(one < two) || one == two;
+  return !(one < two);
 }
 
 #endif
