@@ -61,9 +61,14 @@ public:
     std::copy(other.begin(), other.end(), begin());
   }
 
+  //Move Constructor
   SSArray(SSArray<value_type> && other) noexcept
   {
-    swap(other);
+    _size = other._size;
+    _arrPtr = other._arrPtr;
+
+    other._size = 0;
+    other._arrPtr = nullptr;
   }
 
   //Copy Assignment
@@ -154,6 +159,7 @@ template<typename Data_Type>
 bool operator<( const SSArray<Data_Type> & one, const SSArray<Data_Type> & two ) {
   for( std::size_t i = 0; i < one.size() && i < two.size(); i++) {
     if(one[i] < two[i]) return true;
+    else if(two[i] < one[i]) return false;
   }
 
   if(two.size() > one.size()) return true;
@@ -167,7 +173,7 @@ bool operator<=( const SSArray<Data_Type> & one, const SSArray<Data_Type> & two 
 
 template<typename Data_Type>
 bool operator>( const SSArray<Data_Type> & one, const SSArray<Data_Type> & two ) {
-  return one >= two;
+  return two < one;
 }
 
 template<typename Data_Type>
