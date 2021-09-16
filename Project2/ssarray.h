@@ -66,11 +66,19 @@ public:
     return _arrPtr[i];
   }
 
-  value_type* begin() const {
+  value_type* begin() {
     return _arrPtr;
   }
 
-  value_type* end() const {
+  value_type* end() {
+    return _arrPtr + _size;
+  }
+
+  const value_type* begin() const {
+    return _arrPtr;
+  }
+
+  const value_type* end() const {
     return _arrPtr + _size;
   }
 
@@ -87,5 +95,48 @@ private:
   value_type* _arrPtr;
   size_type _size;
 };
+
+//Global Operator Functions
+template<typename Data_Type>
+bool operator==( const SSArray<Data_Type> & one, const SSArray<Data_Type> & two ) {
+  if(one.size() != two.size()) return false;
+
+  for(std::size_t i = 0; i < one.size(); i++) {
+    if(one[i] != two[1]) return false;
+  }
+
+  return true;
+}
+
+template<typename Data_Type>
+bool operator!=( const SSArray<Data_Type> & one, const SSArray<Data_Type> & two ) {
+  return !(one == two);
+}
+
+
+template<typename Data_Type>
+bool operator<( const SSArray<Data_Type> & one, const SSArray<Data_Type> & two ) {
+  for( std::size_t i = 0; i < one.size() && i < two.size(); i++) {
+    if(one[i] < two[i]) return true;
+  }
+
+  if(two.size() > one.size()) return true;
+  return false;
+}
+
+template<typename Data_Type>
+bool operator<=( const SSArray<Data_Type> & one, const SSArray<Data_Type> & two ) {
+  return one < two || one == two;
+}
+
+template<typename Data_Type>
+bool operator>( const SSArray<Data_Type> & one, const SSArray<Data_Type> & two ) {
+  return !(one < two) && one != two;
+}
+
+template<typename Data_Type>
+bool operator>=( const SSArray<Data_Type> & one, const SSArray<Data_Type> & two ) {
+  return !(one < two) || one == two;
+}
 
 #endif
