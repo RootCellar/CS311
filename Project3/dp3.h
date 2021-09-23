@@ -11,14 +11,29 @@
 #include "llnode.h"    // For LLNode
 #include <cstddef>     // For std::size_t
 #include <functional>  // For std::function
+#include <algorithm>   // For std::unique
 
 
 template <typename ValueType>
 ValueType lookup(const LLNode<ValueType> * head,
                  std::size_t index)
 {
-    return ValueType();  // Dummy return
-    // TODO: WRITE THIS!!!
+    if(head == nullptr) {
+      throw std::out_of_range("lookup: invalid index " + index);
+    }
+    if(index == 0) return head->_data;
+
+    const LLNode<ValueType>* current = head;
+    std::size_t spot = 0;
+
+    do {
+      spot++;
+    } while( (current = current->_next) != nullptr && spot != index );
+
+    if(current == nullptr) {
+      throw std::out_of_range("lookup: invalid index " + index);
+    }
+    else return current->_data;
 }
 
 
@@ -31,8 +46,9 @@ template <typename RAIter>
 std::size_t uniqueCount(RAIter first,
                         RAIter last)
 {
-    return std::size_t(42);  // Dummy return
-    // TODO: WRITE THIS!!!
+    std::sort(first, last);
+    RAIter newLast = std::unique(first, last);
+    return std::size_t( newLast - first );
 }
 
 
@@ -42,4 +58,3 @@ int gcd(int a,
 
 
 #endif  //#ifndef FILE_DP3_H_INCLUDED
-
