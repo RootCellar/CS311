@@ -14,14 +14,20 @@ using std::function;
 void didItThrow(const function<void()> & ff,
                 bool & threw)
 {
-    // TODO: WRITE THIS!!!
+    threw = false;
+    try{
+      ff();
+    } catch(...) {
+      threw = true;
+      throw;
+    }
 }
 
 
 int gcd(int a,
         int b)
 {
-    return 42;  // Dummy return
-    // TODO: WRITE THIS!!!
+    if(a == 0) return b;
+    else if( a > b ) return gcd(b, a);
+    else return gcd(b % a, a);
 }
-
