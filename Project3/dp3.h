@@ -4,6 +4,10 @@
 //
 // For CS 311 Fall 2021
 // Header for Project 3 functions
+//
+// Darian Marvel
+// 2021-09-22
+// Completing project 3 using the skeleton
 
 #ifndef FILE_DP3_H_INCLUDED
 #define FILE_DP3_H_INCLUDED
@@ -18,6 +22,7 @@ template <typename ValueType>
 ValueType lookup(const LLNode<ValueType> * head,
                  std::size_t index)
 {
+    // Initial checks / returns
     if(head == nullptr) {
       throw std::out_of_range("lookup: invalid index " + index);
     }
@@ -26,9 +31,12 @@ ValueType lookup(const LLNode<ValueType> * head,
     const LLNode<ValueType>* current = head;
     std::size_t spot = 0;
 
+    // Locate the item or the end
     do {
       spot++;
     } while( (current = current->_next) != nullptr && spot != index );
+
+    // Return
 
     if(current == nullptr) {
       throw std::out_of_range("lookup: invalid index " + index);
@@ -46,8 +54,8 @@ template <typename RAIter>
 std::size_t uniqueCount(RAIter first,
                         RAIter last)
 {
-    std::sort(first, last);
-    RAIter newLast = std::unique(first, last);
+    std::sort(first, last); // Sort to put all like values next to each other
+    RAIter newLast = std::unique(first, last); // std::unique removes consecutive like values
     return std::size_t( newLast - first );
 }
 
