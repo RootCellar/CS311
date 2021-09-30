@@ -4,7 +4,7 @@
 #ifndef HTDCOUNT_H
 #define HTDCOUNT_H
 
-int hdtCount_recurse(std::vector<std::vector<int>> board,
+int hdtCount_recurse(std::vector<std::vector<int>> &board,
                      int dim_x, int dim_y,
                      int squaresLeft);
 
