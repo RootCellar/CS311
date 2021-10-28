@@ -1,47 +1,22 @@
-// fsarray.h  INCOMPLETE
-// VERSION 6
 // Glenn G. Chappell
 // Started: 2021-10-12
 // Updated: 2021-10-20
 //
 // For CS 311 Fall 2021
-// Header for class FSArray
+// Header for class FSTArray
 // Frightfully smart array of int
 // Preliminary to Project 5
 
-// History:
-// - v1:
-//   - Bare-bones only, does not compile. Header & source files,
-//     #ifndef, #include, empty class definition.
-// - v2:
-//   - Add member types value_type, size_type, iterator, const_iterator.
-//   - Add dummy versions (at least) of all member functions, including
-//     dummy return statements for non-void functions. Package compiles.
-//   - Add data members.
-//   - Add class invariants.
-//   - Write (untested versions of) the following member functions:
-//     default ctor, ctor from size (these two are single func), dctor,
-//     op[], size, empty, begin, end, push_back, pop_back.
-// - v3:
-//   - Document exception-safety guarantees for most functions.
-//   - Write copy ctor.
-// - v4:
-//   - Revise class invariants to allow for _data being nullptr if _size
-//     is zero.
-//   - Revise ctor from size, copy ctor accordingly.
-//   - Write move ctor.
-//   - Mark various functions as noexcept.
-// - v5:
-//   - Move func defs to source file: copy & move ops, resize, insert,
-//     erase, swap.
-// - v6:
-//   - Add _capacity data member.
-//   - Revise class invariants & ctors accordingly.
-//   - Add constant DEFAULT_CAP and use it in setting the capacity in
-//     default ctor/ctor from size.
+/*
+ * Darian Marvel
+ * 10/28/2021
+ * Completing Project 5 by:
+ *  - turning FSTArray into a template (and therefore FSTArray)
+ *  - finishing the implementation, and incomplete comments
+*/
 
-#ifndef FILE_FSARRAY_H_INCLUDED
-#define FILE_FSARRAY_H_INCLUDED
+#ifndef FILE_FSTArray_H_INCLUDED
+#define FILE_FSTArray_H_INCLUDED
 
 #include <cstddef>
 // For std::size_t
@@ -50,21 +25,21 @@
 
 
 // *********************************************************************
-// class FSArray - Class definition
+// class FSTArray - Class definition
 // *********************************************************************
 
 
-// class FSArray
-// Frightfully Smart Array of int.
+// class FSTArray
+// Frightfully Smart Templated Array
 // Resizable, copyable/movable, exception-safe.
 // Invariants:
 //     0 <= _size <= _capacity.
 //     _data points to an array of value_type, allocated with new [],
 //      owned by *this, holding _capacity value_type values -- UNLESS
 //      _capacity == 0, in which case _data may be nullptr.
-class FSArray {
+class FSTArray {
 
-// ***** FSArray: types *****
+// ***** FSTArray: types *****
 public:
 
     // value_type: type of data items
@@ -77,18 +52,18 @@ public:
     using iterator = value_type *;
     using const_iterator = const value_type *;
 
-// ***** FSArray: internal-use constants *****
+// ***** FSTArray: internal-use constants *****
 private:
 
     // Capacity of default-constructed object
     enum { DEFAULT_CAP = 16 };
 
-// ***** FSArray: ctors, op=, dctor *****
+// ***** FSTArray: ctors, op=, dctor *****
 public:
 
     // Default ctor & ctor from size
     // Strong Guarantee
-    explicit FSArray(size_type size=0)
+    explicit FSTArray(size_type size=0)
         :_capacity(std::max(size, size_type(DEFAULT_CAP))),
             // _capacity must be declared before _data
          _size(size),
@@ -98,28 +73,28 @@ public:
 
     // Copy ctor
     // Strong Guarantee
-    FSArray(const FSArray & other);
+    FSTArray(const FSTArray & other);
 
     // Move ctor
     // No-Throw Guarantee
-    FSArray(FSArray && other) noexcept;
+    FSTArray(FSTArray && other) noexcept;
 
     // Copy assignment operator
     // ??? Guarantee
-    FSArray & operator=(const FSArray & other);
+    FSTArray & operator=(const FSTArray & other);
 
     // Move assignment operator
     // No-Throw Guarantee
-    FSArray & operator=(FSArray && other) noexcept;
+    FSTArray & operator=(FSTArray && other) noexcept;
 
     // Dctor
     // No-Throw Guarantee
-    ~FSArray()
+    ~FSTArray()
     {
         delete [] _data;
     }
 
-// ***** FSArray: general public operators *****
+// ***** FSTArray: general public operators *****
 public:
 
     // operator[] - non-const & const
@@ -135,7 +110,7 @@ public:
         return _data[index];
     }
 
-// ***** FSArray: general public functions *****
+// ***** FSTArray: general public functions *****
 public:
 
     // size
@@ -203,9 +178,9 @@ public:
 
     // swap
     // No-Throw Guarantee
-    void swap(FSArray & other) noexcept;
+    void swap(FSTArray & other) noexcept;
 
-// ***** FSArray: data members *****
+// ***** FSTArray: data members *****
 private:
 
     // Below, _capacity must be declared before _data
@@ -213,16 +188,16 @@ private:
     size_type    _size;      // Size of client's data
     value_type * _data;      // Pointer to our array
 
-};  // End class FSArray
+};  // End class FSTArray
 
 // *********************************************************************
-// class FSArray - Member function definitions
+// class FSTArray - Member function definitions
 // *********************************************************************
 
 
 // Copy ctor
 // See header for info.
-FSArray::FSArray(const FSArray & other)
+FSTArray::FSTArray(const FSTArray & other)
     :_capacity(other._capacity),
      _size(other.size()),
      _data(other._capacity == 0 ? nullptr
@@ -237,7 +212,7 @@ FSArray::FSArray(const FSArray & other)
 
 // Move ctor
 // See header for info.
-FSArray::FSArray(FSArray && other) noexcept
+FSTArray::FSTArray(FSTArray && other) noexcept
     :_capacity(other._capacity),
      _size(other._size),
      _data(other._data)
@@ -250,7 +225,7 @@ FSArray::FSArray(FSArray && other) noexcept
 
 // Copy assignment operator
 // See header for info.
-FSArray & FSArray::operator=(const FSArray & other)
+FSTArray & FSTArray::operator=(const FSTArray & other)
 {
     // TODO: WRITE THIS!!!
     return *this; // DUMMY
@@ -259,7 +234,7 @@ FSArray & FSArray::operator=(const FSArray & other)
 
 // Move assignment operator
 // See header for info.
-FSArray & FSArray::operator=(FSArray && other) noexcept
+FSTArray & FSTArray::operator=(FSTArray && other) noexcept
 {
     // TODO: WRITE THIS!!!
     return *this; // DUMMY
@@ -268,7 +243,7 @@ FSArray & FSArray::operator=(FSArray && other) noexcept
 
 // resize
 // See header for info.
-void FSArray::resize(FSArray::size_type newsize)
+void FSTArray::resize(FSTArray::size_type newsize)
 {
     // TODO: WRITE THIS!!!
 }
@@ -276,8 +251,8 @@ void FSArray::resize(FSArray::size_type newsize)
 
 // insert
 // See header for info.
-FSArray::iterator FSArray::insert(FSArray::iterator pos,
-                                  const FSArray::value_type & item)
+FSTArray::iterator FSTArray::insert(FSTArray::iterator pos,
+                                  const FSTArray::value_type & item)
 {
     // TODO: WRITE THIS!!!
     return begin();  // DUMMY
@@ -286,7 +261,7 @@ FSArray::iterator FSArray::insert(FSArray::iterator pos,
 
 // erase
 // See header for info.
-FSArray::iterator FSArray::erase(FSArray::iterator pos)
+FSTArray::iterator FSTArray::erase(FSTArray::iterator pos)
 {
     // TODO: WRITE THIS!!!
     return begin();  // DUMMY
@@ -295,9 +270,9 @@ FSArray::iterator FSArray::erase(FSArray::iterator pos)
 
 // swap
 // See header for info.
-void FSArray::swap(FSArray & other) noexcept
+void FSTArray::swap(FSTArray & other) noexcept
 {
     // TODO: WRITE THIS!!!
 }
 
-#endif  //#ifndef FILE_FSARRAY_H_INCLUDED
+#endif  //#ifndef FILE_FSTArray_H_INCLUDED
