@@ -81,7 +81,7 @@ public:
     FSTArray(FSTArray<value_type> && other) noexcept;
 
     // Copy assignment operator
-    // ??? Guarantee
+    // Strong Guarantee
     FSTArray<value_type> & operator=(const FSTArray<value_type> & other);
 
     // Move assignment operator
@@ -151,11 +151,11 @@ public:
     }
 
     // resize
-    // ??? Guarantee
+    // Strong Guarantee
     void resize(size_type newsize);
 
     // insert
-    // ??? Guarantee
+    // Strong Guarantee
     iterator insert(iterator pos,
                     const value_type & item)
     {
@@ -164,7 +164,7 @@ public:
     }
 
     // erase
-    // ??? Guarantee
+    // Strong Guarantee
     iterator erase(iterator pos)
     {
         // TODO: WRITE THIS!!!
@@ -172,14 +172,14 @@ public:
     }
 
     // push_back
-    // ??? Guarantee
+    // Strong Guarantee
     void push_back(const value_type & item)
     {
         insert(end(), item);
     }
 
     // pop_back
-    // ??? Guarantee
+    // Strong Guarantee
     void pop_back()
     {
         erase(end()-1);
@@ -213,10 +213,11 @@ FSTArray<VType>::FSTArray(const FSTArray<VType> & other)
      _data(other._capacity == 0 ? nullptr
                                 : new value_type[other._capacity])
 {
+    try{
     std::copy(other.begin(), other.end(), begin());
-    // The above call to std::copy does not throw, since it copies int
-    // values. But if value_type is changed, then the call may throw, in
-    // which case this copy ctor may need to be rewritten.
+  }catch(...) {
+      delete _data;
+    }
 }
 
 
@@ -239,8 +240,13 @@ FSTArray<VType>::FSTArray(FSTArray<VType> && other) noexcept
 template<typename VType>
 FSTArray<VType> & FSTArray<VType>::operator=(const FSTArray<VType> & other)
 {
-    // TODO: WRITE THIS!!!
-    return *this; // DUMMY
+  FSTArray<VType> temp(other.size());
+
+  std::copy(other.begin(), other.end(), temp.begin());
+
+  swap(temp);
+
+  return *this;
 }
 
 
@@ -249,8 +255,8 @@ FSTArray<VType> & FSTArray<VType>::operator=(const FSTArray<VType> & other)
 template<typename VType>
 FSTArray<VType> & FSTArray<VType>::operator=(FSTArray<VType> && other) noexcept
 {
-    // TODO: WRITE THIS!!!
-    return *this; // DUMMY
+    swap(other);
+    return *this;
 }
 
 
@@ -259,7 +265,25 @@ FSTArray<VType> & FSTArray<VType>::operator=(FSTArray<VType> && other) noexcept
 template<typename VType>
 void FSTArray<VType>::resize(FSTArray<VType>::size_type newsize)
 {
-    // TODO: WRITE THIS!!!
+  if(newsize >= _capacity) {
+
+    //Create a new list of data with the proper size
+    FSTArray<VType> newData(newsize * 3);
+    newData._size = newsize;
+
+    //copy our stuff to it.
+    //this CAN throw. BUT, if it does,
+    //we will simply propogate out and destroy the newData,
+    //and leave our data unchanged.
+    std::copy(begin(), end(), newData.begin());
+
+    //We successfully copied, so now
+    //we can just swap. This does not throw!
+    swap(newData);
+  }
+  else if(newsize < _capacity){
+    _size = newsize;
+  }
 }
 
 /*
@@ -291,7 +315,9 @@ FSTArray::iterator FSTArray<VType>::erase(FSTArray::iterator pos)
 template<typename VType>
 void FSTArray<VType>::swap(FSTArray<VType> & other) noexcept
 {
-    // TODO: WRITE THIS!!!
+    std::swap(_data, other._data);
+    std::swap(_size, other._size);
+    std::swap(_capacity, other._capacity);
 }
 
 #endif  //#ifndef FILE_FSTArray_H_INCLUDED

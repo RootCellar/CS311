@@ -1192,16 +1192,20 @@ TEST_CASE( "FSTArray resize" )
     {
         const size_t SIZE = size_t(10);
         const size_t SIZE2 = size_t(50000000);
+        cout << "C" << endl;
         FSTArray<int> ti(SIZE);
         for (size_t i = 0; i < SIZE; ++i)
         {
             ti[i] = 15-int(i)*int(i);
         }
+        cout << "C" << endl;
         int * savedata = ti.begin();
-
+        cout << "C" << endl;
         // Resize
         ti.resize(SIZE2);
+        cout << "C" << endl;
         ti[SIZE2-1] = 1000;  // Do a write, just for fun
+        cout << "C" << endl;
 
         {
         INFO( "resize - check size" );
@@ -2405,4 +2409,3 @@ int main(int argc,
     // Program return value is return code from doctest
     return dtresult;
 }
-
