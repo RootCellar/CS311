@@ -100,15 +100,21 @@ public:
 
     // operator[] - non-const & const
     // Pre:
-    //     ???
+    //     index is on [0, _size)
     // No-Throw Guarantee
     value_type & operator[](size_type index)
     {
+        if(index >= _size) index = _size-1;
+        if(index < 0) index = 0;
+
         return _data[index];
     }
     const value_type & operator[](size_type index) const
     {
-        return _data[index];
+      if(index >= _size) index = _size-1;
+      if(index < 0) index = 0;
+
+      return _data[index];
     }
 
 // ***** FSTArray: general public functions *****
@@ -159,16 +165,31 @@ public:
     iterator insert(iterator pos,
                     const value_type & item)
     {
-        // TODO: WRITE THIS!!!
-        return begin();  // DUMMY
+
+        size_t index = pos - begin();
+        resize(_size + 1);
+
+        _data[size()-1] = item;
+        std::rotate(begin()+index, end()-1, end());
+
+        return begin() + index;
     }
 
     // erase
     // Strong Guarantee
     iterator erase(iterator pos)
     {
-        // TODO: WRITE THIS!!!
-        return begin();  // DUMMY
+
+      if(_size == 0) return begin();
+      if(pos >= end() || pos < begin()) return begin();
+
+      size_t index = pos - begin();
+
+      std::rotate(begin()+index, begin()+index+1, end());
+
+      resize(size() - 1);
+
+      return begin()+index;
     }
 
     // push_back
@@ -213,11 +234,14 @@ FSTArray<VType>::FSTArray(const FSTArray<VType> & other)
      _data(other._capacity == 0 ? nullptr
                                 : new value_type[other._capacity])
 {
+  if(other._capacity != 0) {
     try{
-    std::copy(other.begin(), other.end(), begin());
-  }catch(...) {
-      delete _data;
+      std::copy(other.begin(), other.end(), begin());
+    } catch(...) {
+        delete [] _data;
+        throw;
     }
+  }
 }
 
 
