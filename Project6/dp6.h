@@ -12,9 +12,9 @@
 
 #include "llnode2.h"
 
-//Reverses the ordering of an LLNode2 list,
-//given a unique_ptr to the head.
-//Does not throw
+// Reverses the ordering of an LLNode2 list,
+// given a unique_ptr to the head.
+// Does not throw
 template<typename ValType>
 void reverseList(std::unique_ptr<LLNode2<ValType>> & head) {
   //handle lists where size < 2
