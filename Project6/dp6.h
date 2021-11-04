@@ -27,11 +27,16 @@ void reverseList(std::unique_ptr<LLNode2<ValType>> & head) {
   //move along the list, moving unique_ptrs around to reverse the direction
   //in which they point
   while( next != nullptr) {
+    //move current forward
     current = std::move(next);
 
+    //create a place to go next, so we can actually go there
+    //after current->_next is set to point to previous
     if(current->_next != nullptr) next = std::move(current->_next);
     else next = nullptr;
 
+    //make current->_next point to previous,
+    //then make current the previous item
     current->_next = std::move(prev);
     prev = std::move(current);
   }
@@ -56,9 +61,7 @@ private:
 
 public:
 
-  LLMap(): _data() {
-
-  }
+  LLMap(): _data(nullptr) {}
 
   ~LLMap() = default;
 
@@ -75,39 +78,77 @@ public:
   LLMap<key_type, value_type> & operator=(LLMap<key_type, value_type> && other) = delete;
 
 
-  // ??? Guarantee
+  // Logic Written by Glenn G. Chappell (llnode2.h)
+  // No-Throw Guarantee
   size_type size() const {
+    if(_data == nullptr) return 0;
 
+    auto p = _data.get();      // Iterates through list
+    std::size_t counter = 0;  // Number of nodes so far
+
+    while (p != nullptr)
+    {
+        p = p->_next.get();
+        ++counter;
+    }
+
+    return counter;
   }
 
-  // ??? Guarantee
+  // No-Throw Guarantee
   bool empty() const {
-
+    return _data == nullptr;
   }
 
-  const value_type* find(key_type key) const {
+  // No-Throw Guarantee
+  const value_type* find(const key_type& key) const {
+    if(_data == nullptr) return nullptr;
+    auto p = _data.get();
 
+    while(p != nullptr && p->_data.first != key) p = p->_next.get();
+
+    if(p == nullptr) return nullptr;
+    else return &(p->_data.second);
+  }
+
+  // No-Throw Guarantee
+  value_type* find(const key_type& key) {
+    if(_data == nullptr) return nullptr;
+    auto p = _data.get();
+
+    while(p != nullptr && p->_data.first != key) p = p->_next.get();
+
+    if(p == nullptr) return nullptr;
+    else return &(p->_data.second);
+  }
+
+  // Strong Guarantee
+  void insert(const key_type& key, const value_type& value) {
+    if(_data == nullptr) {
+      //create first data node
+      pair_type pair;
+      pair.first = key;
+      pair.second = value;
+
+      //std::unique_ptr<LLNode2<pair_type>> toAdd = std::make_unique<LLNode2<pair_type>>(pair);
+    }
   }
 
   // ??? Guarantee
-  value_type* find(key_type key) {
-
-  }
-
-  // ??? Guarantee
-  void insert(key_type key, value_type value) {
-
-  }
-
-  // ??? Guarantee
-  void erase(key_type key) {
+  void erase(const key_type& key) {
 
   }
 
   // ??? Guarantee
   template<typename func>
   void traverse(func function) {
+    auto p = _data.get();
 
+    while(p != nullptr) {
+      std::cout << "C" << std::endl;
+      function(p->_data.first, p->_data.second);
+      p = p->_next.get();
+    }
   }
 
 };
