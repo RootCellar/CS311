@@ -124,29 +124,39 @@ public:
 
   // Strong Guarantee
   void insert(const key_type& key, const value_type& value) {
-    if(_data == nullptr) {
-      //create first data node
-      pair_type pair;
-      pair.first = key;
-      pair.second = value;
+    value_type* data = find(key);
 
-      //std::unique_ptr<LLNode2<pair_type>> toAdd = std::make_unique<LLNode2<pair_type>>(pair);
-    }
+    if(data == nullptr) push_front(_data, std::make_pair(key, value));
+    else *data = value;
   }
 
-  // ??? Guarantee
+  // No-Throw Guarantee
   void erase(const key_type& key) {
+    auto p = _data.get();
+    auto previous = p;
+
+    while(p != nullptr && p->_data.first != key) {
+      previous = p;
+      p = p->_next.get();
+    }
+
+    if(p == nullptr) return;
+
+    if(previous == p) pop_front(_data);
+    else {
+      pop_front(previous->_next);
+    }
+
 
   }
 
-  // ??? Guarantee
+  // Basic Guarantee
   template<typename func>
   void traverse(func function) {
     auto p = _data.get();
 
     while(p != nullptr) {
-      std::cout << "C" << std::endl;
-      function(p->_data.first, p->_data.second);
+      function(p->_data.first, p->_data.second); // may throw
       p = p->_next.get();
     }
   }
