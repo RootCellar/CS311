@@ -932,10 +932,9 @@ int main(int argc,
     // context.shouldExit() first.
 
     // Wait for user
-    cout << "Press ENTER to quit ";
-    userPause();
+    //cout << "Press ENTER to quit ";
+    //userPause();
 
     // Program return value is return code from doctest
     return dtresult;
 }
-
