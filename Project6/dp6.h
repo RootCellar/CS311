@@ -1,12 +1,43 @@
+/*
+ * Darian Marvel
+ * 11-3-2021
+ * Completing Project 6
+*/
+
 #ifndef DP6_H
 #define DP6_H
 
 #include <utility>
+#include <iostream>
 
 #include "llnode2.h"
 
+//Exception Neutral
 template<typename ValType>
 void reverseList(std::unique_ptr<LLNode2<ValType>> & head) {
+  //handle lists where size < 2
+  if(head == nullptr) return;
+  if(head->_next == nullptr) return;
+
+  //setup pointers
+  std::unique_ptr<LLNode2<ValType>> prev = std::move(head);
+  std::unique_ptr<LLNode2<ValType>> current;
+  std::unique_ptr<LLNode2<ValType>> next = std::move(prev->_next);
+
+  //move along the list, moving unique_ptrs around to reverse the direction
+  //in which they point
+  while( next != nullptr) {
+    current = std::move(next);
+
+    if(current->_next != nullptr) next = std::move(current->_next);
+    else next = nullptr;
+
+    current->_next = std::move(prev);
+    prev = std::move(current);
+  }
+
+  //set head to the new beginning of the list
+  head = std::move(prev);
 
 }
 
