@@ -25,6 +25,7 @@ struct BSTreeNode {
   std::unique_ptr<BSTreeNode<Value>> _left;
   std::unique_ptr<BSTreeNode<Value>> _right;
 
+  // copy constructs _data, may throw
   BSTreeNode(Value item): _data(item) {}
 };
 
@@ -62,7 +63,7 @@ void traverse_insert(const std::unique_ptr<BSTreeNode<Value>> & head,
 // insert the item into that tree, recursing as needed.
 //
 // Exception Neutral
-// Strong Guarantee
+// Basic Guarantee
 template<typename Value>
 void insert(std::unique_ptr<BSTreeNode<Value>> & head,
             const Value & item) {
