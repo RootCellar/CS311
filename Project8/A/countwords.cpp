@@ -47,16 +47,13 @@ int main() {
     file >> word;
 
     if(!file) {
-
       if(file.eof()) {
-
         //End of file
         break;
       }
 
       cout << "Error during file read" << endl;
       return 1;
-
     }
 
     words[word]++;
@@ -75,7 +72,6 @@ int main() {
   }
 
   cout << endl << endl;
-
   cout << "Number of distinct words: " << distinct << endl;
 
   return 0;
