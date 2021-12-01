@@ -8,6 +8,15 @@
 // Uses the "doctest" unit-testing framework, version 2
 // Requires doctest.h, squarer.h
 
+/*
+ *
+ * Darian Marvel
+ * 12/1/2021
+ * Completing this file for Project 8, Exercise B
+ *
+*/
+
+
 // Includes for code to be tested
 #include "squarer.h"         // For class Squarer
 #include "squarer.h"         // Double-inclusion check, for testing only
